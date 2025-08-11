@@ -5,7 +5,7 @@
       <template #header>
         <span class="card-title">项目基本信息</span>
       </template>
-      
+
       <el-form ref="projectFormRef" :model="form" :rules="rules" label-width="120px">
         <el-row :gutter="20">
           <el-col :span="12">
@@ -16,54 +16,58 @@
           <el-col :span="12">
             <el-form-item label="项目类型" prop="type">
               <el-select v-model="form.type" placeholder="项目类型" clearable style="width: 100%" :disabled="!canEdit">
-                <el-option v-for="dict in manage_project_type" :key="dict.value" :label="dict.label" :value="dict.value" />
+                <el-option v-for="dict in manage_project_type" :key="dict.value" :label="dict.label"
+                  :value="dict.value" />
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
-        
+
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="归属区域" prop="deptId">
-              <treeselect v-model="form.deptId" :options="enabledDeptOptions" :show-count="true" 
-                placeholder="请选择归属区域" :disabled="!canEdit" />
+              <el-tree-select class="mt-2" node-key="id" :data="enabledDeptOptions"
+                :props="{ label: 'label', value: 'id' } as any" 
+                 :disabled="!canEdit" 
+                 :render-after-expand="false"
+                v-model="form.deptId" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="立项时间" prop="initiationDate">
-              <el-date-picker v-model="form.initiationDate" value-format="yyyy-MM-dd" style="width: 100%" 
-                type="date" placeholder="请选择立项时间" :disabled="!canEdit" />
+            <el-form-item label="立项时间" prop="initiationDate" v-if="workflowInstanceId === ''">
+              <el-date-picker v-model="form.initiationDate" value-format="yyyy-MM-dd" style="width: 100%" type="date"
+                placeholder="请选择立项时间" :disabled="!canEdit" />
             </el-form-item>
           </el-col>
         </el-row>
-        
+
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="项目状态" prop="status">
               <el-select v-model="form.status" placeholder="项目状态" clearable style="width: 100%" :disabled="!canEdit">
-                <el-option v-for="dict in manage_project_status" :key="dict.value" 
-                  :label="dict.label" :value="dict.value" />
+                <el-option v-for="dict in manage_project_status" :key="dict.value" :label="dict.label"
+                  :value="dict.value" />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="交付时间" prop="deliveryDate">
-              <el-date-picker v-model="form.deliveryDate" value-format="yyyy-MM-dd" style="width: 100%" 
-                type="date" placeholder="请选择交付时间" :disabled="isDeliveryDisabled" />
+            <el-form-item label="期望交付时间" prop="deliveryDate">
+              <el-date-picker v-model="form.expectDeliveryTime" value-format="yyyy-MM-dd" style="width: 100%"
+                type="date" placeholder="请选择期望交付时间" :disabled="isDeliveryDisabled" />
             </el-form-item>
           </el-col>
         </el-row>
-        
+
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="项目金额(万)" prop="amount">
-              <el-input-number v-model="form.amount" placeholder="请输入项目金额" controls-position="right" 
-                style="width: 100%" :min="0" :precision="2" :disabled="isAmountDisabled" />
+              <el-input-number v-model="form.amount" placeholder="请输入项目金额" controls-position="right" style="width: 100%"
+                :min="0" :precision="2" :disabled="isAmountDisabled" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="项目进度" prop="progress">
-              <el-input-number v-model="form.progress" placeholder="请输入项目进度" controls-position="right" 
+              <el-input-number v-model="form.progress" placeholder="请输入项目进度" controls-position="right"
                 style="width: 100%" :min="0" :max="100" :disabled="isProgressDisabled" />
             </el-form-item>
           </el-col>
@@ -86,8 +90,8 @@
                   </template>
                 </el-table-column>
               </el-table>
-              
-              <el-button type="primary" plain @click="addWeeklyReport" class="mt-2" 
+
+              <el-button type="primary" plain @click="addWeeklyReport" class="mt-2"
                 v-if="canAddWeeklyReport">添加周报</el-button>
             </el-form-item>
           </el-col>
@@ -100,21 +104,15 @@
       <template #header>
         <span class="card-title">审核操作</span>
       </template>
-      
+
       <el-form :model="auditForm" label-width="120px">
         <el-form-item label="审核意见" prop="opinion">
           <el-input v-model="auditForm.opinion" type="textarea" :rows="4" placeholder="请输入审核意见" />
         </el-form-item>
-        
+
         <el-form-item label="审核附件" prop="attachment">
-          <el-upload
-            class="upload-demo"
-            drag
-            action="#"
-            multiple
-            :file-list="auditForm.attachmentList"
-            :before-upload="beforeUpload"
-            :on-remove="handleRemove">
+          <el-upload class="upload-demo" drag action="#" multiple :file-list="auditForm.attachmentList"
+            :before-upload="beforeUpload" :on-remove="handleRemove">
             <el-icon class="el-icon--upload"><upload-filled /></el-icon>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
           </el-upload>
@@ -152,17 +150,17 @@
         <el-form-item label="标题" prop="title">
           <el-input v-model="weeklyReportForm.title" placeholder="请输入周报标题" />
         </el-form-item>
-        
+
         <el-form-item label="填报日期" prop="fllingDate">
-          <el-date-picker v-model="weeklyReportForm.fllingDate" type="date" value-format="YYYY-MM-DD" 
+          <el-date-picker v-model="weeklyReportForm.fllingDate" type="date" value-format="YYYY-MM-DD"
             placeholder="请选择填报日期" style="width: 100%" />
         </el-form-item>
-        
+
         <el-form-item label="周报内容" prop="content">
           <editor v-model="weeklyReportForm.content" :min-height="200" />
         </el-form-item>
       </el-form>
-      
+
       <template #footer>
         <el-button @click="weeklyReportEditDialog.visible = false">取消</el-button>
         <el-button type="primary" @click="saveWeeklyReport" :loading="weeklyReportSubmitting">保存</el-button>
@@ -177,7 +175,7 @@ import { deptTreeSelect } from '@/api/system/user/index';
 import { listProjectDemandWeeklyReport, addProjectDemandWeeklyReport } from '@/api/system/projectDemandWeeklyReport';
 import { getProject, updateProject } from '@/api/system/project';
 import { getProjectDemand, updateProjectDemand } from '@/api/system/projectDemand';
-import { submitWorkflowTask, approveWorkflowTask, rejectWorkflowTask, completeWorkflowTask, getWorkflowInstance } from '@/api/workflow';
+import { submitWorkflowTask, approveWorkflowTask, rejectWorkflowTask, completeWorkflowTask, getWorkflowInstance, getWorkflowTaskVariables } from '@/api/workflow';
 import { UploadFilled } from '@element-plus/icons-vue';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
@@ -201,7 +199,7 @@ const form = ref({
   deptId: '',
   initiationDate: '',
   status: '',
-  deliveryDate: '',
+  expectDeliveryTime: '',
   amount: 0,
   progress: 0,
 });
@@ -288,9 +286,6 @@ const rules = {
   status: [
     { required: true, message: "项目状态不能为空", trigger: "blur" },
   ],
-  initiationDate: [
-    { required: true, message: "立项时间不能为空", trigger: "blur" },
-  ],
   amount: [
     { required: true, message: "项目金额不能为空", trigger: "blur" },
   ],
@@ -314,6 +309,12 @@ const getDeptTree = () => {
     enabledDeptOptions.value = response.data;
     enabledDeptOptions.value = filterDisabledDept(JSON.parse(JSON.stringify(response.data)));
   });
+};
+
+/** 通过条件过滤节点  */
+const filterNode = (value: string, data: any) => {
+  if (!value) return true;
+  return data.label.indexOf(value) !== -1;
 };
 
 // 过滤禁用的区域
@@ -349,7 +350,7 @@ const getWeeklyReports = async () => {
 const handleApprove = async () => {
   try {
     submitting.value = true;
-    
+
     // 先保存表单数据
     if (currentNodeCode.value === 'project-audit' || currentNodeCode.value === 'project-final-audit') {
       // 更新项目需求数据
@@ -359,7 +360,7 @@ const handleApprove = async () => {
         auditAttachment: auditForm.value.attachment
       });
     }
-    
+
     // 调用工作流API进行审核通过操作
     await approveWorkflowTask({
       instanceId: workflowInstanceId.value,
@@ -367,7 +368,7 @@ const handleApprove = async () => {
       opinion: auditForm.value.opinion,
       attachment: auditForm.value.attachment
     });
-    
+
     proxy?.$modal.msgSuccess("审核通过成功！");
     handleCancel();
   } catch (error) {
@@ -382,17 +383,17 @@ const handleReject = async () => {
     proxy?.$modal.msgError("驳回时必须填写审核意见！");
     return;
   }
-  
+
   try {
     submitting.value = true;
-    
+
     // 先保存审核意见
     await updateProjectDemand({
       ...form.value,
       auditOpinion: auditForm.value.opinion,
       auditAttachment: auditForm.value.attachment
     });
-    
+
     // 调用工作流API进行驳回操作
     await rejectWorkflowTask({
       instanceId: workflowInstanceId.value,
@@ -400,7 +401,7 @@ const handleReject = async () => {
       opinion: auditForm.value.opinion,
       attachment: auditForm.value.attachment
     });
-    
+
     proxy?.$modal.msgSuccess("驳回成功！");
     handleCancel();
   } catch (error) {
@@ -414,7 +415,7 @@ const handleSubmit = async () => {
   try {
     await projectFormRef.value?.validate();
     submitting.value = true;
-    
+
     // 根据节点类型保存不同的数据
     if (currentNodeCode.value === 'demand-create') {
       // 保存项目需求数据
@@ -422,7 +423,7 @@ const handleSubmit = async () => {
     } else if (currentNodeCode.value === 'project-development') {
       // 保存项目进度数据
       await updateProject(form.value);
-      
+
       // 如果进度达到100%，自动提交到终审
       if (form.value.progress >= 100) {
         await submitWorkflowTask({
@@ -435,14 +436,14 @@ const handleSubmit = async () => {
         return;
       }
     }
-    
+
     // 提交工作流任务
     await submitWorkflowTask({
       instanceId: workflowInstanceId.value,
       nodeCode: currentNodeCode.value,
       formData: form.value
     });
-    
+
     proxy?.$modal.msgSuccess("提交成功！");
     handleCancel();
   } catch (error) {
@@ -478,10 +479,10 @@ const saveWeeklyReport = async () => {
   try {
     await weeklyReportFormRef.value?.validate();
     weeklyReportSubmitting.value = true;
-    
+
     await addProjectDemandWeeklyReport(weeklyReportForm.value);
     proxy?.$modal.msgSuccess("周报保存成功！");
-    
+
     weeklyReportEditDialog.visible = false;
     await getWeeklyReports(); // 刷新周报列表
   } catch (error) {
@@ -493,7 +494,7 @@ const saveWeeklyReport = async () => {
 
 // 文件上传相关
 const beforeUpload = (file: File) => {
-  const isValidType = ['image/jpeg', 'image/png', 'application/pdf', 'application/msword', 
+  const isValidType = ['image/jpeg', 'image/png', 'application/pdf', 'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'].includes(file.type);
   const isLt10M = file.size / 1024 / 1024 < 10;
 
@@ -505,7 +506,7 @@ const beforeUpload = (file: File) => {
     proxy?.$modal.msgError('上传文件大小不能超过 10MB!');
     return false;
   }
-  
+
   // 阻止自动上传，手动处理
   return false;
 };
@@ -517,13 +518,49 @@ const handleRemove = (file: any) => {
   }
 };
 
+// 通过taskId加载流程变量和项目需求数据
+const loadWorkflowDataByTaskId = async (taskId: string) => {
+  try {
+    // 获取任务变量
+    const taskVariablesResponse = await getWorkflowTaskVariables(taskId);
+    const variables = taskVariablesResponse.data || {};
+
+    // 从变量中获取projectDemandId
+    const demandId = variables.projectDemandId;
+    if (demandId) {
+      projectDemandId.value = demandId;
+
+      // 查询项目需求信息
+      const demandData = await getProjectDemand(demandId);
+      if (demandData.data) {
+        // 填充表单数据
+        form.value = { ...form.value, ...demandData.data };
+      }
+    }
+
+    // 设置工作流实例ID（如果变量中有）
+    if (variables.instanceId) {
+      workflowInstanceId.value = variables.instanceId;
+    }
+
+    // 设置当前节点编码（如果变量中有）
+    if (variables.nodeCode) {
+      currentNodeCode.value = variables.nodeCode;
+    }
+
+  } catch (error) {
+    console.error('通过taskId加载数据失败:', error);
+    proxy?.$modal.msgError('加载任务数据失败！');
+  }
+};
+
 // 加载数据的方法
 const loadWorkflowData = async () => {
   try {
     if (workflowInstanceId.value) {
       const workflowData = await getWorkflowInstance(workflowInstanceId.value);
       currentNodeCode.value = workflowData.data.currentNodeCode;
-      
+
       // 获取项目需求数据
       if (projectDemandId.value) {
         const demandData = await getProjectDemand(projectDemandId.value);
@@ -539,21 +576,25 @@ const loadWorkflowData = async () => {
 // 初始化
 onMounted(async () => {
   getDeptTree();
-  
+
   // 从路由获取参数
   const route = useRoute();
-  workflowInstanceId.value = route.query.instanceId as string;
+  const taskId = route.query.taskId as string;
+  workflowInstanceId.value = route.query.instanceId as string || route.query.id as string;
   projectDemandId.value = route.query.demandId as string;
-  
+
   if (route.query.nodeCode) {
     currentNodeCode.value = route.query.nodeCode as string;
   }
-  
-  // 加载工作流数据
-  if (workflowInstanceId.value) {
+
+  // 优先通过taskId加载数据
+  if (taskId) {
+    await loadWorkflowDataByTaskId(taskId);
+  } else if (workflowInstanceId.value) {
+    // 回退到原有的加载方式
     await loadWorkflowData();
   }
-  
+
   if (currentNodeCode.value === 'project-development') {
     await getWeeklyReports();
   }

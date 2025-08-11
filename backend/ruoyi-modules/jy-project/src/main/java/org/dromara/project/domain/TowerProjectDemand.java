@@ -161,5 +161,5 @@ public class TowerProjectDemand extends BaseEntity {
     @TableLogic
     private Long delFlag;
 
-
+    private String workflowInstanceId;
 }

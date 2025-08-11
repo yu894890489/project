@@ -1,6 +1,7 @@
 package org.dromara.project.controller;
 
 import java.util.Map;
+import java.util.HashMap;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,10 @@ import org.dromara.common.web.core.BaseController;
 import org.dromara.common.core.domain.R;
 import org.dromara.common.log.enums.BusinessType;
 import jakarta.annotation.PostConstruct;
+import org.dromara.common.core.service.WorkflowService;
+import org.dromara.common.core.domain.dto.StartProcessReturnDTO;
+import org.dromara.common.core.domain.dto.StartProcessDTO;
+
 
 /**
  * 工作流程控制器
@@ -26,6 +31,8 @@ import jakarta.annotation.PostConstruct;
 @RestController
 @RequestMapping("/system/workflow")
 public class WorkflowController extends BaseController {
+
+    private final WorkflowService workFlowService;
 
     @PostConstruct
     public void init() {
@@ -47,30 +54,24 @@ public class WorkflowController extends BaseController {
     // @SaCheckPermission("workflow:instance:start")
     @Log(title = "启动工作流", businessType = BusinessType.INSERT)
     @PostMapping("/start")
-    public R<Map<String, Object>> startWorkflow(@RequestBody Map<String, Object> params) {
-        log.info("接收到启动工作流请求，参数: {}", params);
+    public R<Map<String, Object>> startWorkflow(@RequestBody StartProcessDTO dto) {
+        log.info("接收到启动工作流请求，参数: {}", dto);
         
         try {
-            String flowCode = (String) params.get("flowCode");
-            Map<String, Object> variables = (Map<String, Object>) params.get("variables");
+            // 集成warm-flow工作流引擎
+            StartProcessReturnDTO instance = workFlowService.startWorkFlow(dto);
             
-            log.info("启动工作流 - flowCode: {}, variables: {}", flowCode, variables);
-            
-            // TODO: 集成warm-flow工作流引擎
-            // WorkflowInstance instance = warmFlowService.startWorkflow(flowCode, variables);
-            // 
-            // Map<String, Object> result = new HashMap<>();
-            // result.put("instanceId", instance.getId());
-            // result.put("currentNodeCode", instance.getCurrentNodeCode()); 
-            // result.put("status", instance.getStatus());
+            Map<String, Object> result = new HashMap<>();
+            result.put("instanceId", instance.getProcessInstanceId());
+            result.put("taskId", instance.getTaskId());
             
             // 临时返回模拟数据
-            String instanceId = "mock-instance-" + System.currentTimeMillis();
-            Map<String, Object> result = Map.of(
-                "instanceId", instanceId,
-                "currentNodeCode", "demand-create",
-                "status", "RUNNING"
-            );
+            // String instanceId = "mock-instance-" + System.currentTimeMillis();
+            // Map<String, Object> result = Map.of(
+            //     "instanceId", instanceId,
+            //     "currentNodeCode", "demand-create",
+            //     "status", "RUNNING"
+            // );
             
             log.info("工作流启动成功，返回结果: {}", result);
             return R.ok(result);
@@ -249,6 +250,26 @@ public class WorkflowController extends BaseController {
         );
         
         return R.ok(result);
+    }
+
+    /**
+     * 获取工作流任务变量
+     */
+    // @SaCheckPermission("workflow:task:query")
+    @GetMapping("/task/{taskId}/variables")
+    public R<Map<String, Object>> getWorkflowTaskVariables(@PathVariable String taskId) {
+        log.info("获取任务变量，taskId: {}", taskId);
+        
+        try {
+            // 调用工作流服务获取任务变量
+            Map<String, Object> variables = workFlowService.getTaskVariables(Long.parseLong(taskId));
+            
+            log.info("获取任务变量成功，变量内容: {}", variables);
+            return R.ok(variables);
+        } catch (Exception e) {
+            log.error("获取任务变量失败", e);
+            return R.fail("获取任务变量失败: " + e.getMessage());
+        }
     }
 
     /**

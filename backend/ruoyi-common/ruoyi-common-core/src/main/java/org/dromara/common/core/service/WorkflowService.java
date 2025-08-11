@@ -92,4 +92,12 @@ public interface WorkflowService {
      * @param message 办理意见
      */
     boolean completeTask(Long taskId, String message);
+
+    /**
+     * 获取任务变量
+     *
+     * @param taskId 任务ID
+     * @return 任务变量
+     */
+    Map<String, Object> getTaskVariables(Long taskId);
 }

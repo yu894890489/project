@@ -363,6 +363,8 @@ const { queryParams, form, rules } = toRefs(data);
 const getList = async () => {
   loading.value = true;
   const res = await listProjectDemand(queryParams.value);
+  console.log('API response:', res);
+  console.log('First row data:', res.rows?.[0]);
   projectDemandList.value = res.rows;
   total.value = res.total;
   loading.value = false;
@@ -452,14 +454,26 @@ const handleExport = () => {
 /** 启动工作流 */
 const handleStartWorkflow = async (row?: ProjectDemandVO) => {
   try {
+    console.log('handleStartWorkflow row:', row);
+    console.log('row.id:', row?.id);
+    console.log('row.projectId:', row?.projectId);
+    console.log('row.defineProjectName:', row?.defineProjectName);
+    console.log('row.name:', row?.name);
+    
+    if (!row?.id || !row?.defineProjectName || !row?.name) {
+      proxy?.$modal.msgError(`需求信息不完整，无法启动工作流！缺少字段: ${!row?.id ? 'ID ' : ''}${!row?.defineProjectName ? '项目名称 ' : ''}${!row?.name ? '需求名称 ' : ''}`);
+      return;
+    }
+    
     await proxy?.$modal.confirm('确认启动该需求的审核流程吗？');
     
     const params = {
       flowCode: 'da',
+      businessId: row.id,
       variables: {
-        projectDemandId: row?.id,
-        projectName: row?.defineProjectName,
-        demandName: row?.name,
+        projectDemandId: row.id,
+        projectName: row.defineProjectName,
+        demandName: row.name,
         createUser: proxy?.$auth.user?.nickName || '系统用户',
         createTime: new Date().toISOString()
       }
@@ -470,7 +484,31 @@ const handleStartWorkflow = async (row?: ProjectDemandVO) => {
     
     // 更新需求记录的工作流实例ID和状态
     const updateData = {
-      ...row,
+      id: row.id,
+      projectId: row.projectId || 1, // 如果projectId为空，设置一个默认值
+      deptId: row.deptId,
+      name: row.name,
+      defineProjectName: row.defineProjectName,
+      productSituation: row.productSituation,
+      title: row.title,
+      type: row.type,
+      cost: row.cost,
+      startTime: row.startTime,
+      deliveryTime: row.deliveryTime,
+      expectDeliveryTime: row.expectDeliveryTime,
+      signingStatus: row.signingStatus,
+      confirmStatus: row.confirmStatus,
+      developmentStatus: row.developmentStatus,
+      designStatus: row.designStatus,
+      testStatus: row.testStatus,
+      deliveryStatus: row.deliveryStatus,
+      operationStatus: row.operationStatus,
+      attachment: row.attachment,
+      auditUserId: row.auditUserId,
+      auditOpinion: row.auditOpinion,
+      auditAttachment: row.auditAttachment,
+      progress: row.progress,
+      remark: row.remark,
       workflowInstanceId: result.data.instanceId,
       workflowStatus: 1,
       status: '审核中' // 更新需求状态为审核中

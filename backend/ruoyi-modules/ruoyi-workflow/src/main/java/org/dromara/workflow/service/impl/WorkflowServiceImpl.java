@@ -15,8 +15,10 @@ import org.dromara.workflow.domain.bo.StartProcessBo;
 import org.dromara.workflow.service.IFlwDefinitionService;
 import org.dromara.workflow.service.IFlwInstanceService;
 import org.dromara.workflow.service.IFlwTaskService;
+import org.dromara.workflow.domain.vo.FlowTaskVo;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -146,6 +148,30 @@ public class WorkflowServiceImpl implements WorkflowService {
         // 忽略权限(系统后台发起审批 无用户信息 需要忽略权限)
         completeTask.getVariables().put("ignore", true);
         return flwTaskService.completeTask(completeTask);
+    }
+
+    /**
+     * 获取任务变量
+     *
+     * @param taskId 任务ID
+     * @return 任务变量
+     */
+    @Override
+    public Map<String, Object> getTaskVariables(Long taskId) {
+        // 通过任务ID获取任务信息
+        FlowTaskVo flowTaskVo = flwTaskService.selectById(taskId);
+        if (ObjectUtil.isNull(flowTaskVo)) {
+            return new HashMap<>();
+        }
+        
+        // 通过实例ID获取流程变量
+        FlowInstance flowInstance = flwInstanceService.selectInstById(flowTaskVo.getInstanceId());
+        if (ObjectUtil.isNull(flowInstance)) {
+            return new HashMap<>();
+        }
+        
+        // 返回流程实例的变量
+        return flwInstanceService.instanceVariable(flowInstance.getId());
     }
 
 }

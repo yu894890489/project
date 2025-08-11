@@ -185,6 +185,6 @@ public class TowerProjectDemandVo implements Serializable {
     @ExcelProperty(value = "需求描述")
     private String remark;
 
-
+    private String workflowInstanceId;
 
 }

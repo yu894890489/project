@@ -88,6 +88,19 @@ export const constantRoutes: RouteRecordRaw[] = [
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
+  },
+  {
+    path: '/project/workflow',
+    component: Layout,
+    meta: { title: '项目管理', icon: 'project' },
+    children: [
+      {
+        path: 'project',
+        component: () => import('@/views/project/workflow/project.vue'),
+        name: 'Project',
+        meta: { title: '项目工作流表单', icon: 'project' }
+      }
+    ]
   }
 ];
 

@@ -83,3 +83,11 @@ export function getWorkflowHistory(instanceId: string) {
     method: 'get'
   });
 }
+
+// 获取工作流任务变量
+export function getWorkflowTaskVariables(taskId: string) {
+  return request({
+    url: `/system/workflow/task/${taskId}/variables`,
+    method: 'get'
+  });
+}

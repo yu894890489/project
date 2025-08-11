@@ -120,7 +120,7 @@ public class FlwTaskServiceImpl implements IFlwTaskService {
         FlowParams flowParams = FlowParams.build()
             .flowCode(startProcessBo.getFlowCode())
             .variable(startProcessBo.getVariables())
-            .flowStatus(BusinessStatusEnum.DRAFT.getStatus());
+            .flowStatus(BusinessStatusEnum.WAITING.getStatus());
         Instance instance;
         try {
             instance = insService.start(businessId, flowParams);

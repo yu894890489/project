@@ -30,31 +30,31 @@ public class TowerProjectDemandBo extends BaseEntity {
     /**
      *
      */
-    @NotNull(message = "不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotNull(message = "不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long projectId;
 
     /**
      *
      */
-    @NotNull(message = "不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotNull(message = "不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long deptId;
 
     /**
      * 需求名称
      */
-    @NotBlank(message = "需求名称不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotBlank(message = "需求名称不能为空", groups = { AddGroup.class, EditGroup.class })
     private String name;
 
     /**
      * 项目名称
      */
-    @NotBlank(message = "项目名称不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotBlank(message = "项目名称不能为空", groups = { AddGroup.class, EditGroup.class })
     private String defineProjectName;
 
     /**
      * 产品情况
      */
-    @NotBlank(message = "产品情况不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotBlank(message = "产品情况不能为空", groups = { AddGroup.class, EditGroup.class })
     private String productSituation;
 
     /**
@@ -80,31 +80,31 @@ public class TowerProjectDemandBo extends BaseEntity {
     /**
      * 开始时间
      */
-    @NotNull(message = "开始时间不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotNull(message = "开始时间不能为空", groups = { AddGroup.class, EditGroup.class })
     private Date startTime;
 
     /**
      * 交付时间
      */
-    @NotNull(message = "交付时间不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotNull(message = "交付时间不能为空", groups = { AddGroup.class, EditGroup.class })
     private Date deliveryTime;
 
     /**
      * 期望交付时间
      */
-    @NotNull(message = "期望交付时间不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotNull(message = "期望交付时间不能为空", groups = { AddGroup.class, EditGroup.class })
     private Date expectDeliveryTime;
 
     /**
      * 签约情况 1是0否
      */
-    @NotNull(message = "签约情况 1是0否不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotNull(message = "签约情况 1是0否不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long signingStatus;
 
     /**
      * 需求确认状态
      */
-    @NotNull(message = "需求确认状态不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotNull(message = "需求确认状态不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long confirmStatus;
 
     /**
@@ -116,13 +116,13 @@ public class TowerProjectDemandBo extends BaseEntity {
     /**
      * 设计状态
      */
-    @NotNull(message = "设计状态不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotNull(message = "设计状态不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long designStatus;
 
     /**
      *
      */
-    @NotNull(message = "不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotNull(message = "不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long testStatus;
 
     /**
@@ -134,45 +134,46 @@ public class TowerProjectDemandBo extends BaseEntity {
     /**
      * 运维状态
      */
-    @NotNull(message = "运维状态不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotNull(message = "运维状态不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long operationStatus;
 
     /**
      * 需求附件
      */
-    @NotBlank(message = "需求附件 不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotBlank(message = "需求附件 不能为空", groups = { AddGroup.class, EditGroup.class })
     private String attachment;
 
     /**
      * 审核人
      */
-    @NotNull(message = "审核人不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotNull(message = "审核人不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long auditUserId;
 
     /**
      * 审核已经
      */
-    @NotBlank(message = "审核已经不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotBlank(message = "审核已经不能为空", groups = { AddGroup.class, EditGroup.class })
     private String auditOpinion;
 
     /**
      * 审核反馈附件
      */
-    @NotBlank(message = "审核反馈附件不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotBlank(message = "审核反馈附件不能为空", groups = { AddGroup.class, EditGroup.class })
     private String auditAttachment;
 
     /**
      * 进度
      */
-    @NotNull(message = "进度不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotNull(message = "进度不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long progress;
 
     /**
      * 需求描述
      */
-    @NotBlank(message = "需求描述不能为空", groups = { AddGroup.class, EditGroup.class })
+    // @NotBlank(message = "需求描述不能为空", groups = { AddGroup.class, EditGroup.class })
     private String remark;
 
 
+    private String workflowInstanceId;
 
 }
